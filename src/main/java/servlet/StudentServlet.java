@@ -8,6 +8,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "StudentServlet", value = "/server")
@@ -34,15 +35,6 @@ public class StudentServlet extends HttpServlet {
             case "showUpdate":
                 showUpdate(request, response);
                 break;
-            case "update":
-                try {
-                    update(request, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-                break;
             case "delete":
                 delete(request, response);
                 break;
@@ -67,6 +59,18 @@ public class StudentServlet extends HttpServlet {
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
+                break;
+            case "update":
+                try {
+                    update(request, response);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            case "searchByName":
+                searchByName(request, response);
                 break;
             default:
                 display(request, response);
@@ -135,6 +139,23 @@ public class StudentServlet extends HttpServlet {
         }
         studentDAO.update(new Student(id, name, birthday, address, phoneNumber, email, classDAO.selectByName(classroom)));
         response.sendRedirect("/server");
+    }
+
+    private void searchByName(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String name = request.getParameter("searchByName");
+        boolean flag = false;
+        List<Student> studentByName = new ArrayList<>();
+        for (int i = 0; i < studentDAO.display().size(); i++) {
+            if (studentDAO.display().get(i).getName().toUpperCase().contains(name.toUpperCase())) {
+                studentByName.add(studentDAO.display().get(i));
+                flag = true;
+            }
+        }
+        request.setAttribute("flag", flag);
+        request.setAttribute("classrooms", classDAO.display());
+        request.setAttribute("studentByName", studentByName);
+        RequestDispatcher rd = request.getRequestDispatcher("/resultSearch.jsp");
+        rd.forward(request, response);
     }
 
 

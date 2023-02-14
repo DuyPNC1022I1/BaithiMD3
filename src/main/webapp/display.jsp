@@ -7,6 +7,11 @@
 <body>
 <h1> Show List Student</h1>
 <a href="/server?action=showCreate"><button>Add</button></a>
+<form action="/server?action=searchByName" method="post">
+    <label>SearchByName</label>
+    <input type="text" name="searchByName">
+    <input type="submit">
+</form>
 <table border="2">
     <tr>
         <td>Id</td>

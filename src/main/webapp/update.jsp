@@ -20,7 +20,7 @@
 </head>
 <body>
 <h1>Form update information</h1>
-<form action="/server?action=update&id=${student.getId()}" method="get">
+<form action="/server?action=update&id=${student.id}" method="post">
     <label>Name: </label>
     <input type="text" name="name" placeholder="name"><br>
     <label>Email: </label>
