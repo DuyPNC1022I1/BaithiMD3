@@ -32,6 +32,16 @@ public class StudentServlet extends HttpServlet {
                 showCreateForm(request, response);
                 break;
             case "showUpdate":
+                showUpdate(request, response);
+                break;
+            case "update":
+                try {
+                    update(request, response);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "delete":
                 delete(request, response);
@@ -58,8 +68,6 @@ public class StudentServlet extends HttpServlet {
                     throw new RuntimeException(e);
                 }
                 break;
-            case "update":
-                break;
             default:
                 display(request, response);
                 break;
@@ -80,13 +88,18 @@ public class StudentServlet extends HttpServlet {
     }
 
     private void create(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, ClassNotFoundException {
+        int phoneNumber = 0;
+        int birthday = 0;
         String name = request.getParameter("name");
         String email = request.getParameter("email");
-        int birthday = Integer.parseInt(request.getParameter("birthday"));
         String address = request.getParameter("address");
-        int phoneNumber = Integer.parseInt(request.getParameter("phoneNumber"));
         String classroom = request.getParameter("classroom");
-
+        try {
+            phoneNumber = Integer.parseInt(request.getParameter("phoneNumber"));
+            birthday = Integer.parseInt(request.getParameter("birthday"));
+        }catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
         studentDAO.create(new Student(name, birthday, address, phoneNumber, email, classDAO.selectByName(classroom)));
         response.sendRedirect("/server");
     }
@@ -94,6 +107,33 @@ public class StudentServlet extends HttpServlet {
     private void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         studentDAO.delete(id);
+        response.sendRedirect("/server");
+    }
+
+    private void showUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Student student = studentDAO.selectById(id);
+        request.setAttribute("students", student);
+        request.setAttribute("classrooms", classDAO.display());
+        RequestDispatcher rd = request.getRequestDispatcher("/update.jsp");
+        rd.forward(request, response);
+    }
+
+    private void update(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, ClassNotFoundException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        int phoneNumber = 0;
+        int birthday = 0;
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        String classroom = request.getParameter("classroom");
+        try {
+            phoneNumber = Integer.parseInt(request.getParameter("phoneNumber"));
+            birthday = Integer.parseInt(request.getParameter("birthday"));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        studentDAO.update(new Student(id, name, birthday, address, phoneNumber, email, classDAO.selectByName(classroom)));
         response.sendRedirect("/server");
     }
 

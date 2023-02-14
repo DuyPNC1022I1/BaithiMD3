@@ -20,7 +20,7 @@
 </head>
 <body>
 <h1>Form update information</h1>
-<form action="/server?action=update&id=${student.getId()}" method="post">
+<form action="/server?action=update&id=${student.getId()}" method="get">
     <label>Name: </label>
     <input type="text" name="name" placeholder="name"><br>
     <label>Email: </label>
@@ -40,7 +40,7 @@
     <input type="submit" value="Submit">
 </form>
 <p>
-    <a href="/admin">
+    <a href="/server">
         <button>Back to home page</button>
     </a>
 </p>

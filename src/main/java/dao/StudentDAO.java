@@ -72,7 +72,22 @@ public class StudentDAO implements Crud<Student> {
 
     @Override
     public void update(Student student) {
+        try {
+            Connection c = getConnection();
+            PreparedStatement pr = c.prepareStatement("update student set name = ?, address =?, birthday =?, phonenumber =?, email =?, class =? where id =?");
+            pr.setString(1, student.getName());
+            pr.setString(2, student.getAddress());
+            pr.setInt(3, student.getBirthday());
+            pr.setInt(4, student.getPhoneNumber());
+            pr.setString(5, student.getEmail());
+            pr.setString(6, student.getClassroom().getName());
+            pr.setInt(7, student.getId());
 
+            pr.executeUpdate();
+            c.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -86,5 +101,29 @@ public class StudentDAO implements Crud<Student> {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public Student selectById(int id) {
+        Student student = null;
+        try {
+            Connection c = getConnection();
+            PreparedStatement pr = c.prepareStatement("select * from student where id = ?");
+            pr.setInt(1, id);
+            ResultSet resultSet = pr.executeQuery();
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                int birthday = resultSet.getInt("birthday");
+                String address = resultSet.getString("address");
+                int phoneNumber = resultSet.getInt("phonenumber");
+                String email = resultSet.getString("email");
+                Classroom classroom = classDAO.selectByName(resultSet.getString("class"));
+
+                student = new Student(id, name, birthday, address, phoneNumber, email, classroom);
+                c.close();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return student;
     }
 }
