@@ -1,17 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: THIS PC
-  Date: 2/14/2023
-  Time: 10:22 AM
-  To change this template use File | Settings | File Templates.
---%>
-<%--
-  Created by IntelliJ IDEA.
-  User: THIS PC
-  Date: 2/9/2023
-  Time: 4:29 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -20,17 +6,17 @@
 </head>
 <body>
 <h1>Form update information</h1>
-<form action="/server?action=update&id=${student.id}" method="post">
+<form action="/server?action=update&id=${student.getId()}" method="post">
     <label>Name: </label>
-    <input type="text" name="name" placeholder="name"><br>
+    <input type="text" name="name" placeholder="${student.getName()}"><br><br>
     <label>Email: </label>
-    <input type="text" name="email" placeholder="email"><br>
+    <input type="text" name="email" placeholder="${student.getEmail()}"><br><br>
     <label>Birthday: </label>
-    <input type="text" name="birthday" placeholder="birthDay"><br>
+    <input type="text" name="birthday" placeholder="${student.getBirthday()}"><br><br>
     <label>Address: </label>
-    <input type="text" name="address" placeholder="address"><br>
+    <input type="text" name="address" placeholder="${student.getAddress()}"><br><br>
     <label>PhoneNumber: </label>
-    <input type="text" name="phoneNumber" placeholder="phoneNumber"><br>
+    <input type="text" name="phoneNumber" placeholder="${student.getPhoneNumber()}"><br><br>
     <label>Classroom: </label>
     <select name="classroom">
         <c:forEach items="${requestScope['classrooms']}" var="classroom">

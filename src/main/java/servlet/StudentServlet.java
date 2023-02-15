@@ -117,7 +117,7 @@ public class StudentServlet extends HttpServlet {
     private void showUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Student student = studentDAO.selectById(id);
-        request.setAttribute("students", student);
+        request.setAttribute("student", student);
         request.setAttribute("classrooms", classDAO.display());
         RequestDispatcher rd = request.getRequestDispatcher("/update.jsp");
         rd.forward(request, response);
